@@ -35,11 +35,15 @@
         # packageManager version in package.json so bun's semver check passes.
         # Drop once nixpkgs ships bun ≥ 1.3.14.
         opencodePkg = upstreamOpencode.overrideAttrs (old: {
-          # Upstream's x86_64-linux node_modules hash is stale; remove when fixed upstream.
+          # Upstream's node_modules hashes are stale on these platforms; remove when fixed upstream.
           node_modules =
             if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then
               old.node_modules.override {
                 hash = "sha256-G2AHfouEWB9q/yS6E8C3HLHbK8ijymh+s2cK4/ZXydw=";
+              }
+            else if pkgs.stdenv.hostPlatform.system == "aarch64-darwin" then
+              old.node_modules.override {
+                hash = "sha256-Wi38XQ6o8NFzaTaYGYfvsgAYdFn3kaOiTOKb58uI6YM=";
               }
             else
               old.node_modules;
